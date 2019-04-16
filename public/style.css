@@ -1,0 +1,40 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #181818;
+}
+
+.screen {
+  
+}
+
+.screen--hidden {
+  display: none;
+}
+
+.main {
+  height: 100%;
+}
+
+.article {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.article__button {
+    width: 250px;
+    height: 60px;
+    background-color: #d63031;
+    border: 0;
+    color: #eee;
+    font: 24px "Raleway", sans-serif;
+    text-shadow: 0 0 3px rgba(0, 0, 0, .5);
+}
