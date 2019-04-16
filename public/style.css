@@ -9,14 +9,6 @@ body {
   background-color: #181818;
 }
 
-.screen {
-
-}
-
-.screen--hidden {
-  display: none;
-}
-
 .main {
   height: 100%;
 }
@@ -50,4 +42,18 @@ body {
 
 .article__button:focus {
   outline: 0;
+}
+
+.result {
+  color: #eee;
+  text-align: center;
+}
+
+.result__title {
+  font: 21px "Raleway", sans-serif;
+}
+
+.result__value {
+  margin-top: 0;
+  font: 64px "Raleway", sans-serif;
 }
