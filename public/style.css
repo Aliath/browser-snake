@@ -10,7 +10,7 @@ body {
 }
 
 .screen {
-  
+
 }
 
 .screen--hidden {
@@ -37,4 +37,13 @@ body {
     color: #eee;
     font: 24px "Raleway", sans-serif;
     text-shadow: 0 0 3px rgba(0, 0, 0, .5);
+    border: 2px solid rgba(0, 0, 0, .5);
+}
+
+.article__button:hover {
+  background-color: #af2627;
+}
+
+.article__button:focus {
+  outline: 0;
 }
