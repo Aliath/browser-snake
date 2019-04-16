@@ -8,10 +8,20 @@
   </head>
   <body>
     <main class="main">
-      <article class="article">
-        <button id="start" class="article__button article__button--start">START</button>
+      <article class="article" id="start-page">
+        <button id="start-button" class="article__button">START</button>
       </article>
-      <canvas class="screen screen--hidden" id="screen"></canvas>
+      <article class="article article--hidden" id="game-page">
+        <canvas id="screen"></canvas>
+      </article>
+      <article class="article article--hidden" id="gameover-page">
+        <div class="result">
+          <h3 class="result__title">TWÓJ WYNIK</h3>
+          <h2 id="gameover-result" class="result__value"></h2>
+        </div>
+
+        <button id="gameover-button" class="article__button">ZAGRAJ PONOWNIE</button>
+      </article>
     </main>
 
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
