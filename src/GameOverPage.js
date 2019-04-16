@@ -3,14 +3,22 @@ import store from './store';
 export default class GameOverPage {
   defineElements() {
     this.containerElement = document.getElementById('gameover-page');
-    this.button = document.getElementById('gameover-button');
-
+    this.resultElement = document.getElementById('gameover-result');
+    this.buttonElement = document.getElementById('gameover-button');
   }
 
   handleElements() {
-    this.button.addEventListener('click', () => {
-      store.set('PAGE_STATE', 'START_PAGE');
+    this.buttonElement.addEventListener('click', () => {
+      store.set('PAGE_STATE', 'GAME_PAGE');
     }, false);
+  }
+
+  bindResultHandler() {
+    store.subscribe(() => {
+      const value = store.get('value');
+
+      this.resultElement.textContent = value;
+    });
   }
 
   hide() {
@@ -25,5 +33,6 @@ export default class GameOverPage {
   constructor() {
     this.defineElements();
     this.handleElements();
+    this.bindResultHandler();
   }
 }

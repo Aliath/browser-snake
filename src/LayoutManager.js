@@ -55,5 +55,6 @@ export default class LayoutManager {
     this.createPages();
 
     this.currentState = START_PAGE;
+    this.renderPage();
   }
 }
