@@ -1,4 +1,4 @@
-class Store {
+export default class Store {
   callSubscribers() {
     this.subscribers.forEach(handler => {
       handler();
@@ -23,6 +23,3 @@ class Store {
     this.subscribers = [];
   }
 }
-
-const store = new Store();
-export default store;

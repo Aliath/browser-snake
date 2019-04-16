@@ -1,7 +1,7 @@
 import StartPage from './Pages/StartPage.js';
 import GamePage from './Pages/GamePage.js';
 import GameOverPage from './Pages/GameOverPage.js';
-import store from './store';
+import store from './Pages/store';
 
 
 const START_PAGE = 'START_PAGE';
@@ -54,7 +54,7 @@ export default class LayoutManager {
     this.bindPageHandler();
     this.createPages();
 
-    this.currentState = START_PAGE;
+    store.set('PAGE_STATE', 'START_PAGE');
     this.renderPage();
   }
 }
