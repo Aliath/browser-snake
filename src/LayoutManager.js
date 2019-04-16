@@ -1,6 +1,6 @@
-import StartPage from './StartPage.js';
-import GamePage from './GamePage.js';
-import GameOverPage from './GameOverPage.js';
+import StartPage from './Pages/StartPage.js';
+import GamePage from './Pages/GamePage.js';
+import GameOverPage from './Pages/GameOverPage.js';
 import store from './store';
 
 
