@@ -29,6 +29,10 @@ body {
   height: 100%;
 }
 
+.article--hidden {
+  display: none;
+}
+
 .article__button {
     width: 250px;
     height: 60px;
