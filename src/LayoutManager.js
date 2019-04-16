@@ -1,8 +1,4 @@
-import StartPage from './Pages/StartPage.js';
-import GamePage from './Pages/GamePage.js';
-import GameOverPage from './Pages/GameOverPage.js';
-import store from './Pages/store';
-
+import { StartPage, GamePage, GameOverPage, store } from './Pages';
 
 const START_PAGE = 'START_PAGE';
 const GAME_PAGE = 'GAME_PAGE';
