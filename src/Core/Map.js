@@ -13,6 +13,10 @@ export default class Map {
     return this.collisions[y * this.width + x] === 1;
   }
 
+  getCollisions() {
+    return [...this.collisions];
+  }
+
   setDefaultCols() {
     const newCollisions = this.collisions.map((value, index) => {
       const x = index % this.width;
