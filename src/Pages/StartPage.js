@@ -1,4 +1,5 @@
-import store from './store';
+import pageStore from './store';
+import gameStore from '../Core/store';
 
 export default class StartPage {
   defineElements() {
@@ -8,7 +9,8 @@ export default class StartPage {
 
   handleElements() {
     this.startButton.addEventListener('click', () => {
-      store.set('PAGE_STATE', 'GAME_PAGE');
+      pageStore.set('PAGE_STATE', 'GAME_PAGE');
+      gameStore.set('GAME_STATE', 'ON');
     }, false);
   }
 
