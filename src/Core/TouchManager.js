@@ -7,7 +7,7 @@ export default class TouchManager {
     if (deltaOfDelta === 0) return; //just a click
 
     const dominantDirection = deltaOfDelta > 0 ? 'H' : 'V';
-    const dominantValue = [deltaX, deltaY].reduce(a, b => Math.abs(a) > Math.abs(b) ? a : b) > 0;
+    const dominantValue = [deltaX, deltaY].reduce((a, b) => Math.abs(a) > Math.abs(b) ? a : b) > 0;
 
     let direction;
 
