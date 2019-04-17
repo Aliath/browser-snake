@@ -1,4 +1,4 @@
-import { KEYBOARD_DIRECTIONS } from './Directions';
+import store from './store';
 
 const KEYBOARD_DIRECTIONS = {
   UP: ['KeyW', 'ArrowUp'],
@@ -13,7 +13,7 @@ export default class KeyboardManager {
       Object.keys(KEYBOARD_DIRECTIONS).forEach(direction => {
         const keyCodes = KEYBOARD_DIRECTIONS[direction];
 
-        if (keyCodes.indexOf(event.keyCode) > -1) store.set('GAME_DIRECTION', direction);
+        if (keyCodes.indexOf(event.code) > -1) store.set('GAME_DIRECTION', direction);
       });
     }, false);
   }

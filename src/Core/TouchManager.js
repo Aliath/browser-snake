@@ -1,3 +1,5 @@
+import store from './store';
+
 export default class TouchManager {
   handleTouch(deltaX, deltaY) {
     const deltaOfDelta = Math.abs(deltaX) - Math.abs(deltaY);
@@ -21,14 +23,14 @@ export default class TouchManager {
   }
 
   handleTouchStart() {
-    element.addEventListener('touchstart', event => {
+    this.element.addEventListener('touchstart', event => {
       this.startX = event.changedTouches[0].clientX;
       this.startY = event.changedTouches[0].clientY;
     }, false);
   }
 
   handleTouchEnd() {
-    element.addEventListener('touchend', event => {
+      this.element.addEventListener('touchend', event => {
       const endX = event.changedTouches[0].clientX;
       const endY = event.changedTouches[0].clientY;
 
