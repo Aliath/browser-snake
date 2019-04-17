@@ -24,16 +24,15 @@ export default class Game {
     gameStore.set('GAME_SIZE', [0, 0]);
     gameStore.set('GAME_DIRECTION', 'RIGHT');
     gameStore.set('GAME_SPEED', 250);
+    gameStore.set('GAME_RESULT', 0);
+
   }
 
   handleStore() {
     gameStore.on('GAME_OVER', () => {
-      const playedTime = (Date.now() - gameStore.get('GAME_STARTTIME')) / 1000;
-
       gameStore.set('GAME_DIRECTION', 'RIGHT');
       gameStore.set('GAME_SPEED', 250);
       gameStore.set('GAME_STATE', 'OFF');
-      pageStore.set('GAME_VALUE', playedTime);
       pageStore.set('PAGE_STATE', 'GAMEOVER_PAGE');
     });
   }

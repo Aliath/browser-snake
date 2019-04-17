@@ -12,14 +12,15 @@ export default class GameOverPage {
     this.buttonElement.addEventListener('click', () => {
       pageStore.set('PAGE_STATE', 'GAME_PAGE');
       gameStore.set('GAME_STATE', 'ON');
+      gameStore.set('GAME_STARTTIME', Date.now());
     }, false);
   }
 
   bindResultHandler() {
     pageStore.subscribe(() => {
-      const value = pageStore.get('GAME_VALUE');
+      const value = gameStore.get('GAME_RESULT');
 
-      this.resultElement.textContent = value + 's';
+      this.resultElement.textContent = value + ' pkt';
     });
   }
 
