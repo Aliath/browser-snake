@@ -1,4 +1,5 @@
-import store from './store';
+import pageStore from './store';
+import gameStore from '../Core/store';
 
 export default class GameOverPage {
   defineElements() {
@@ -9,15 +10,16 @@ export default class GameOverPage {
 
   handleElements() {
     this.buttonElement.addEventListener('click', () => {
-      store.set('PAGE_STATE', 'GAME_PAGE');
+      pageStore.set('PAGE_STATE', 'GAME_PAGE');
+      gameStore.set('GAME_STATE', 'ON');
     }, false);
   }
 
   bindResultHandler() {
-    store.subscribe(() => {
-      const value = store.get('value');
+    pageStore.subscribe(() => {
+      const value = pageStore.get('GAME_VALUE');
 
-      this.resultElement.textContent = value;
+      this.resultElement.textContent = value + 's';
     });
   }
 

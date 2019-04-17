@@ -11,6 +11,7 @@ export default class StartPage {
     this.startButton.addEventListener('click', () => {
       pageStore.set('PAGE_STATE', 'GAME_PAGE');
       gameStore.set('GAME_STATE', 'ON');
+      gameStore.set('GAME_STARTTIME', Date.now());
     }, false);
   }
 

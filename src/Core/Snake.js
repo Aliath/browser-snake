@@ -45,6 +45,14 @@ export default class Snake {
 
       return copiedElement;
     });
+
+    this.checkIsOnCollision();
+  }
+
+  checkIsOnCollision() {
+    this.body.forEach(([x, y]) => {
+      if (this.map.checkCollision(x, y)) store.emitEvent('GAME_OVER');
+    });
   }
 
   getElements() {
@@ -69,11 +77,18 @@ export default class Snake {
     this.body.push([x, y]);
   }
 
+  reset() {
+    this.body = [];
+    this.createBody();
+  }
+
   handleStore() {
     store.subscribe(() => {
       this.direction = store.get('GAME_DIRECTION');
       this.speed = store.get('GAME_SPEED');
     });
+
+    store.on('GAME_OVER', this.reset.bind(this));
   }
 
 
