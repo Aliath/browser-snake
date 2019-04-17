@@ -1,3 +1,4 @@
+import Point from './Point';
 import store from './store';
 
 const countDeltas = direction => {
@@ -31,28 +32,58 @@ export default class Snake {
     this.direction = direction;
   }
 
+  updateGameSpeed() {
+    const playedTime = (Date.now() - store.get('GAME_STARTTIME')) / 1000;
+    const minutesPlayed = playedTime / 60;
+    const newSpeed = 2/(minutesPlayed + 2) * 250;
+
+    store.set('GAME_SPEED', newSpeed);
+  }
+
   move() {
+    this.updateGameSpeed();
     setTimeout(this.move.bind(this), store.get('GAME_SPEED'));
     if (store.get('GAME_STATE') === 'OFF') return;
 
     const deltas = countDeltas(this.direction);
+    if (this.checkIsOnPoint(deltas)) {
+      store.set('GAME_RESULT', store.get('GAME_RESULT') + 1);
+      return;
+    }
 
-    this.body = this.body.map(element => {
-      const copiedElement = [...element];
+    const newPosition = this.body[0].map((value, index) => value += deltas[index]);
+    const bodyCopy = [...this.body].map(value => [...value]);
 
-      copiedElement[0] += deltas[0];
-      copiedElement[1] += deltas[1];
+    bodyCopy.unshift(newPosition);
 
-      return copiedElement;
+    this.body = bodyCopy.map((element, index, array) => {
+      if (index === 0) return element;
+      const previousElement = array[index - 1];
+      const newElement = [...previousElement];
+
+      return newElement;
     });
+
+    this.body.shift();
 
     this.checkIsOnCollision();
   }
 
   checkIsOnCollision() {
-    this.body.forEach(([x, y]) => {
-      if (this.map.checkCollision(x, y)) store.emitEvent('GAME_OVER');
-    });
+    const [x, y] = this.body[0]
+    if (this.map.checkCollision(x, y)) store.emitEvent('GAME_OVER');
+  }
+
+  checkIsOnPoint(deltas) {
+    const firstElement = this.body[0];
+    const newPosition = [firstElement[0] + deltas[0], firstElement[1] + deltas[1]];
+
+    const pointPosition = this.point.getPosition();
+    if (pointPosition[0] !== newPosition[0] || pointPosition[1] !== newPosition[1]) return false;
+
+    this.body.unshift(newPosition);
+    this.point.setNewPosition();
+    return true;
   }
 
   getElements() {
@@ -93,9 +124,11 @@ export default class Snake {
 
 
   constructor(map) {
-    this.direction = 'RIGHT';
     this.map = map;
+    this.direction = 'RIGHT';
     this.body = [];
+
+    this.point = new Point(map, this);
 
     this.createBody();
     this.handleStore();

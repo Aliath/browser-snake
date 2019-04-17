@@ -20,6 +20,10 @@ export default class Renderer {
     context.fillStyle = BACKGROUND_COLOR;
     context.fillRect(0, 0, this.map.width * GRID_SIZE, this.map.height * GRID_SIZE);
 
+    context.fillStyle = POINT_COLOR;
+    const point = this.snake.point.getPosition();
+    context.fillRect(point[0] * GRID_SIZE, point[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+
     context.fillStyle = SNAKE_COLOR;
     snakeElements.forEach(element => {
       context.fillRect(element[0] * GRID_SIZE, element[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE);
