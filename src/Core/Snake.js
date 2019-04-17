@@ -67,10 +67,22 @@ export default class Snake {
     this.body.shift();
 
     this.checkIsOnCollision();
+    this.checkHasEatenItself();
+  }
+
+  checkHasEatenItself() {
+    const [x, y] = this.body[0];
+    let result = false;
+
+    this.body.slice(1).forEach(element => {
+      if (element[0] === x && element[1] === y) result = true;
+    });
+
+    if (result) store.emitEvent('GAME_OVER');
   }
 
   checkIsOnCollision() {
-    const [x, y] = this.body[0]
+    const [x, y] = this.body[0];
     if (this.map.checkCollision(x, y)) store.emitEvent('GAME_OVER');
   }
 
