@@ -34,8 +34,8 @@ export default class TouchManager {
       const endX = event.changedTouches[0].clientX;
       const endY = event.changedTouches[0].clientY;
 
-      const deltaX = endX - startX;
-      const deltaY = endY - startY;
+      const deltaX = endX - this.startX;
+      const deltaY = endY - this.startY;
 
       this.handleTouch(deltaX, deltaY);
     }, false);
