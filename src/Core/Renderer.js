@@ -1,10 +1,11 @@
 import store from './store';
+import countGridSize from '../Utils/countGridSize';
 
 const BACKGROUND_COLOR = '#181818';
 const SNAKE_COLOR = '#00b894';
 const COLLISION_COLOR = 'darkred';
 const POINT_COLOR = '#a29bfe';
-const GRID_SIZE = 32;
+const GRID_SIZE = countGridSize();
 
 export default class Renderer {
   render() {

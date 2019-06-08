@@ -5,8 +5,10 @@ import KeyboardManager from './KeyboardManager';
 import TouchManager from './TouchManager';
 import gameStore from './store';
 import pageStore from '../Pages/store';
+import countGridSize from '../Utils/countGridSize';
 
-const GRID_SIZE = 32;
+
+const GRID_SIZE = countGridSize();
 
 export default class Game {
   setCanvasSize() {

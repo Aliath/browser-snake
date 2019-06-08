@@ -14,19 +14,6 @@ const countDeltas = direction => {
   }
 };
 
-const getOpposedDirection = direction => {
-  switch (direction) {
-    case 'UP':
-      return 'DOWN';
-    case 'LEFT':
-      return 'RIGHT';
-    case 'RIGHT':
-      return 'LEFT';
-    case 'DOWN':
-      return 'UP';
-  }
-};
-
 export default class Snake {
   setDirection(direction) {
     this.direction = direction;
@@ -35,7 +22,7 @@ export default class Snake {
   updateGameSpeed() {
     const playedTime = (Date.now() - store.get('GAME_STARTTIME')) / 1000;
     const minutesPlayed = playedTime / 60;
-    const newSpeed = 2/(minutesPlayed + 2) * 250;
+    const newSpeed = 2 / (minutesPlayed + 2) * 250;
 
     store.set('GAME_SPEED', newSpeed);
   }
@@ -46,6 +33,7 @@ export default class Snake {
     if (store.get('GAME_STATE') === 'OFF') return;
 
     const deltas = countDeltas(this.direction);
+    if (this.checkIsOnBody(deltas)) return store.emitEvent('GAME_OVER');
     if (this.checkIsOnPoint(deltas)) {
       store.set('GAME_RESULT', store.get('GAME_RESULT') + 1);
       return;
@@ -71,11 +59,14 @@ export default class Snake {
   }
 
   checkHasEatenItself() {
-    const [x, y] = this.body[0];
+    if (this.body.length === 1) return false;
+
+    const [startX, startY] = this.body[0];
     let result = false;
 
-    this.body.slice(1).forEach(element => {
-      if (element[0] === x && element[1] === y) result = true;
+    this.body.slice(1).forEach(bodyPart => {
+      const [ x, y ] = bodyPart;
+      if (x === startX && y === startY) result = true;
     });
 
     if (result) store.emitEvent('GAME_OVER');
@@ -96,6 +87,18 @@ export default class Snake {
     this.body.unshift(newPosition);
     this.point.setNewPosition();
     return true;
+  }
+
+  checkIsOnBody(deltas) {
+    const firstElement = this.body[0];
+    const newPosition = [firstElement[0] + deltas[0], firstElement[1] + deltas[1]];
+
+    return !!this.body.find(bodyPart => {
+      const [x, y] = bodyPart;
+      const isOnBody = newPosition[0] === x && newPosition[1] === y;
+      
+      return isOnBody;
+    });
   }
 
   getElements() {

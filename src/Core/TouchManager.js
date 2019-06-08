@@ -6,12 +6,12 @@ export default class TouchManager {
 
     if (deltaOfDelta === 0) return; //just a click
 
-    const dominantDirection = deltaOfDelta > 0 ? 'H' : 'V';
+    const dominantDirection = deltaOfDelta > 0 ? 'HORIZONTAL' : 'VERTICAL';
     const dominantValue = [deltaX, deltaY].reduce((a, b) => Math.abs(a) > Math.abs(b) ? a : b) > 0;
 
     let direction;
 
-    if (dominantDirection === 'H') {
+    if (dominantDirection === 'HORIZONTAL') {
       if (dominantValue > 0) direction = 'RIGHT';
       else direction = 'LEFT';
     } else {
