@@ -1,42 +1,6 @@
 (function () {
     'use strict';
 
-    var Renderer = /** @class */ (function () {
-        function Renderer(options) {
-            this.isRendering = false;
-            var canvasSelector = options.canvasSelector;
-            this.canvas = document.querySelector(canvasSelector);
-            this.context = this.canvas.getContext('2d');
-            this.fitCanvasToScreen();
-        }
-        Renderer.prototype.fitCanvasToScreen = function () {
-            var canvas = this.canvas;
-            var width = window.innerWidth, height = window.innerHeight;
-            Object.assign(canvas, { width: width, height: height });
-        };
-        Renderer.prototype.getTimeDelta = function (currentTimestamp) {
-            var timeDelta = 0;
-            if (this.lastTimestamp) {
-                timeDelta = currentTimestamp - this.lastTimestamp;
-            }
-            this.lastTimestamp = currentTimestamp;
-            return timeDelta;
-        };
-        Renderer.prototype.renderBoard = function () {
-            var _a = this, canvas = _a.canvas, context = _a.context;
-            context.fillStyle =
-                context.fillRect(0, 0, canvas.width, canvas.height);
-        };
-        Renderer.prototype.render = function (currentTimestamp) {
-            if (!this.isRendering)
-                return;
-            requestAnimationFrame(this.render);
-            var timeDelta = this.getTimeDelta(currentTimestamp);
-            this.renderBoard();
-        };
-        return Renderer;
-    }());
-
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
 
@@ -82,6 +46,38 @@
     }());
     var EventEmitter$1 = new EventEmitter();
 
+    var SnakeElementDirection;
+    (function (SnakeElementDirection) {
+        SnakeElementDirection[SnakeElementDirection["HORIZONTAL"] = 0] = "HORIZONTAL";
+        SnakeElementDirection[SnakeElementDirection["VERTICAL"] = 1] = "VERTICAL";
+    })(SnakeElementDirection || (SnakeElementDirection = {}));
+    var Snake = /** @class */ (function () {
+        function Snake() {
+            this.handleRenderEvents();
+        }
+        Snake.prototype.handleRenderEvents = function () {
+            var _this = this;
+            EventEmitter$1.on('startRender', function (_a) {
+                var width = _a[0], height = _a[1];
+                _this.reset([Math.floor(width / 2), Math.floor(height / 2)]);
+            });
+        };
+        Snake.prototype.getElements = function () {
+            return JSON.parse(JSON.stringify(this.elements));
+        };
+        Snake.prototype.reset = function (startCoordinates) {
+            var anchorX = startCoordinates[0], anchorY = startCoordinates[1];
+            this.elements = [
+                {
+                    direction: SnakeElementDirection.HORIZONTAL,
+                    anchor: [anchorX, anchorY],
+                    length: 1
+                }
+            ];
+        };
+        return Snake;
+    }());
+
     var Scene;
     (function (Scene) {
         Scene[Scene["START"] = 0] = "START";
@@ -115,18 +111,141 @@
         return SceneManager;
     }());
 
-    var Snake = /** @class */ (function () {
-        function Snake() {
+    var GRID_SIZE = 16;
+    var Renderer = /** @class */ (function () {
+        function Renderer(options) {
+            this.isRendering = false;
+            var canvasSelector = options.canvasSelector, snake = options.snake, snakeColor = options.snakeColor, boardColor = options.boardColor, pointColor = options.pointColor, collisionColor = options.collisionColor;
+            this.canvas = document.querySelector(canvasSelector);
+            this.context = this.canvas.getContext('2d');
+            this.snake = snake;
+            Object.assign(this, { snakeColor: snakeColor, boardColor: boardColor, pointColor: pointColor, collisionColor: collisionColor });
+            this.fitCanvasToScreen();
+            this.handleSceneChange();
         }
-        return Snake;
+        Renderer.prototype.startRendering = function () {
+            var _a = this.canvas, width = _a.width, height = _a.height;
+            var _b = [width / GRID_SIZE, height / GRID_SIZE], areaWidth = _b[0], areaHeight = _b[1];
+            this.isRendering = true;
+            this.startTimestamp = this.lastTimestamp = performance.now();
+            EventEmitter$1.emit('startRender', [areaWidth, areaHeight]);
+            requestAnimationFrame(this.render.bind(this));
+        };
+        Renderer.prototype.stopRendering = function () {
+            this.isRendering = false;
+        };
+        Renderer.prototype.handleSceneChange = function () {
+            var _this = this;
+            EventEmitter$1.on('changeScene', function (scene) {
+                if (scene === Scene.GAME) {
+                    _this.startRendering();
+                }
+                else {
+                    _this.stopRendering();
+                }
+            });
+        };
+        Renderer.prototype.fitCanvasToScreen = function () {
+            var canvas = this.canvas;
+            var innerWidth = window.innerWidth, innerHeight = window.innerHeight;
+            var width = innerWidth - (innerWidth % GRID_SIZE);
+            var height = innerHeight - (innerHeight % GRID_SIZE);
+            Object.assign(canvas, { width: width, height: height });
+        };
+        Renderer.prototype.getCurrentVelocity = function () {
+            return 0.25; //units per second
+        };
+        Renderer.prototype.getTimeDelta = function (currentTimestamp) {
+            var timeDelta = 0;
+            if (this.lastTimestamp) {
+                timeDelta = currentTimestamp - this.lastTimestamp;
+            }
+            this.lastTimestamp = currentTimestamp;
+            return timeDelta;
+        };
+        Renderer.prototype.drawLine = function (startPoint, endPoint, lineWidth, lineColor, lineCap) {
+            if (lineWidth === void 0) { lineWidth = GRID_SIZE; }
+            if (lineCap === void 0) { lineCap = 'round'; }
+            var context = this.context;
+            context.lineWidth = lineWidth;
+            context.lineCap = lineCap;
+            if (lineColor)
+                context.strokeStyle = lineColor;
+            context.beginPath();
+            context.moveTo.apply(context, startPoint);
+            context.lineTo.apply(context, endPoint);
+            context.stroke();
+        };
+        Renderer.prototype.renderBoard = function () {
+            var _a = this, canvas = _a.canvas, context = _a.context, boardColor = _a.boardColor, collisionColor = _a.collisionColor;
+            context.fillStyle = boardColor;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = collisionColor;
+            context.strokeStyle = collisionColor;
+            var lineOffset = GRID_SIZE / 2;
+            this.drawLine([lineOffset, lineOffset], [canvas.width - lineOffset, lineOffset]);
+            this.drawLine([lineOffset, lineOffset], [lineOffset, canvas.height - lineOffset]);
+            this.drawLine([lineOffset, canvas.height - lineOffset], [canvas.width - lineOffset, canvas.height - lineOffset]);
+            this.drawLine([canvas.width - lineOffset, lineOffset], [canvas.width - lineOffset, canvas.height - lineOffset]);
+        };
+        Renderer.prototype.renderSnake = function () {
+            var _this = this;
+            var _a = this, snakeColor = _a.snakeColor, snake = _a.snake;
+            var elements = snake.getElements();
+            elements.forEach(function (element) {
+                var direction = element.direction, anchor = element.anchor, length = element.length;
+                var startPoint = anchor.map(function (value) { return value * GRID_SIZE; });
+                var endPoint;
+                if (direction === SnakeElementDirection.HORIZONTAL) {
+                    endPoint = [
+                        anchor[0] * GRID_SIZE + length * GRID_SIZE,
+                        anchor[1] * GRID_SIZE
+                    ];
+                }
+                else {
+                    endPoint = [
+                        anchor[0] * GRID_SIZE,
+                        anchor[1] * GRID_SIZE + length * GRID_SIZE
+                    ];
+                }
+                _this.drawLine(startPoint, endPoint, GRID_SIZE, snakeColor, 'round');
+            });
+        };
+        Renderer.prototype.renderInfo = function (timeDelta) {
+            var _a = this, canvas = _a.canvas, context = _a.context;
+            var framesPerSecond = Math.round(1000 / timeDelta);
+            context.fillStyle = 'white';
+            context.textAlign = 'right';
+            context.font = '20px "Lato", sans-serif';
+            context.fillText("SCORE: " + 0, canvas.width - GRID_SIZE * 2, GRID_SIZE * 3);
+            context.fillText("FPS: " + framesPerSecond, canvas.width - GRID_SIZE * 2, GRID_SIZE * 3 + 24);
+        };
+        Renderer.prototype.render = function (currentTimestamp) {
+            if (!this.isRendering)
+                return;
+            requestAnimationFrame(this.render.bind(this));
+            var timeDelta = this.getTimeDelta(currentTimestamp);
+            var currentVelocity = this.getCurrentVelocity();
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.renderBoard();
+            this.renderInfo(timeDelta);
+            this.renderSnake();
+        };
+        return Renderer;
     }());
 
     var Game = /** @class */ (function () {
         function Game(options) {
-            var canvasSelector = options.canvasSelector, wrapperSelector = options.wrapperSelector, startButtonSelector = options.startButtonSelector, playAgainButtonSelector = options.playAgainButtonSelector, scoreSelector = options.scoreSelector, boardColor = options.boardColor, snakeColor = options.snakeColor, pointColor = options.pointColor;
+            var canvasSelector = options.canvasSelector, wrapperSelector = options.wrapperSelector, startButtonSelector = options.startButtonSelector, playAgainButtonSelector = options.playAgainButtonSelector, boardColor = options.boardColor, snakeColor = options.snakeColor, pointColor = options.pointColor, collisionColor = options.collisionColor;
             this.snake = new Snake();
-            // this.board = new Board();
-            this.renderer = new Renderer({ canvasSelector: canvasSelector, pointColor: pointColor, boardColor: boardColor, snakeColor: snakeColor });
+            this.renderer = new Renderer({
+                canvasSelector: canvasSelector,
+                pointColor: pointColor,
+                boardColor: boardColor,
+                snakeColor: snakeColor,
+                collisionColor: collisionColor,
+                snake: this.snake
+            });
             this.sceneManager = new SceneManager({
                 defaultScene: Scene.START,
                 wrapperSelector: wrapperSelector,
@@ -137,15 +256,18 @@
         return Game;
     }());
 
+    var boardColor = '#11151b';
+    var snakeColor = '#16a085';
+    var pointColor = '#f1c40f';
+    var collisionColor = '#c0392b';
+
     new Game({
+        boardColor: boardColor, snakeColor: snakeColor, pointColor: pointColor, collisionColor: collisionColor,
         canvasSelector: '#game',
         wrapperSelector: '#scene-wrapper',
         startButtonSelector: '#start-game',
         playAgainButtonSelector: '#play-again',
         scoreSelector: '#result',
-        boardColor: 'rgba(0, 0, 0, .5)',
-        snakeColor: 'lime',
-        pointColor: 'purple'
     });
 
 }());

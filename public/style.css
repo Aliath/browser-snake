@@ -128,4 +128,12 @@ h2 strong {
     justify-content: center;
     min-width: 100%;
     min-height: 100%;
+    position: relative;
+}
+
+.canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

@@ -11,6 +11,8 @@ export interface GameOptions {
     boardColor: string;
     snakeColor: string;
     pointColor: string;
+    collisionColor: string;
+
 }
 
 export class Game {
@@ -22,11 +24,19 @@ export class Game {
     constructor(options: GameOptions) {
         const {
             canvasSelector, wrapperSelector, startButtonSelector,
-            playAgainButtonSelector, boardColor, snakeColor, pointColor
+            playAgainButtonSelector, boardColor, snakeColor, pointColor,
+            collisionColor
         } = options;
 
         this.snake = new Snake();
-        this.renderer = new Renderer({ canvasSelector, pointColor, boardColor, snakeColor });
+        this.renderer = new Renderer({
+            canvasSelector,
+            pointColor,
+            boardColor,
+            snakeColor,
+            collisionColor,
+            snake: this.snake
+        });
         this.sceneManager = new SceneManager({
             defaultScene: Scene.START,
             wrapperSelector,

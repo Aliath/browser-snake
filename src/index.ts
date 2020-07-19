@@ -1,8 +1,8 @@
 import { Game } from './core/Game';
-import { snakeColor, boardColor, pointColor } from './utils/colors';
+import { snakeColor, boardColor, pointColor, collisionColor } from './utils/colors';
 
 new Game({
-    boardColor, snakeColor, pointColor,
+    boardColor, snakeColor, pointColor, collisionColor,
 
     canvasSelector: '#game',
     wrapperSelector: '#scene-wrapper',
