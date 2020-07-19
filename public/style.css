@@ -1,0 +1,131 @@
+:root {
+    --default-dark: #1e2531;
+    --default-light: #dfdfdf;
+    --default-roundness: 4px;
+
+    --light-sea: #1abc9c;
+    --dark-sea: #16a085;
+    --light-red: #e74c3c;
+    --dark-red: #c0392b;
+    --yellow: #f1c40f;
+    --white: #fff;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--default-dark);
+    color: var(--default-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+}
+
+
+h1 {
+    font-size: 2.75rem;
+    font-weight: normal;
+    margin-bottom: 1rem;
+    padding: 0 .75rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 2rem;
+    padding: 0 .75rem;
+    text-align: center;
+}
+
+h2 strong {
+    display: block;
+    text-align: center;
+    font-size: 120%;
+    margin-top: .5rem;
+}
+
+.description {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    padding: 0 .75rem;
+    line-height: 120%;
+}
+
+.description a {
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--default-light);
+}
+
+.description a:hover {
+    color: var(--white);
+}
+
+
+.button {
+    padding: .7rem 2.25rem;
+    font: 1.25rem 'Roboto', sans-serif;
+    text-transform: uppercase;
+    border: 2px solid transparent;
+    border-radius: var(--default-roundness);
+    transition: border-color .33s ease-in-out;
+    color: var(--default-light);
+    text-shadow: 0 0 4px rgba(0, 0, 0, .5);
+    cursor: pointer;
+}
+
+.button:focus {
+    outline: 0;
+    border: 2px solid rgba(0, 0, 0, .33);
+}
+
+.button--start {
+    background-color: var(--light-sea);
+}
+
+.button--start:hover {
+    background-color: var(--dark-sea);
+}
+
+.button--retry {
+    background-color: var(--light-red);
+}
+
+.button--retry:hover {
+    background-color: var(--dark-red);
+}
+
+
+.scene-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform .33s ease-in-out;
+}
+
+.scene-wrapper.scene-0 {
+    transform: translateX(0);
+}
+
+.scene-wrapper.scene-1 {
+    transform: translateX(-100%);
+}
+
+.scene-wrapper.scene-2 {
+    transform: translateX(-200%);
+}
+
+.scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 100%;
+    min-height: 100%;
+}

@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The snake game</title>
+    <title>The Snake Game</title>
     <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-    <div class="scene scene--entry active">
-        <button class="button button--start">start</button>
+    <div class="scene-wrapper scene-0" id="scene-wrapper">
+        <div class="scene scene--entry">
+            <h1>The Snake Game</h1>
+            <div class="description">
+                Use WASD, arrows or touch events to change the direction of snake.<br />
+                Have fun, <a target="_blank" rel="nofollow" href="https://github.com/Aliath/browser-snake">leave a star</a> if you like it!.
+            </div>
+            <button id="start-game" class="button button--start">start</button>
+        </div>
+        <div class="scene scene--game">
+            <canvas id="game"></canvas>
+        </div>
+        <div class="scene scene-retry">
+            <h2>Your score<strong id="result">0</strong></h2>
+            <button id="play-again" class="button button--retry">play again</button>
+        </div>
     </div>
-    <div class="scene scene--game">
-        <canvas id="game"></canvas>
-    </div>
-    <div class="scene scene-retry">
 
-    </div>
-
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script src="./js/index.js"></script>
 </body>
 </html>

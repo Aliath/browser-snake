@@ -1,6 +1,7 @@
 import EventEmitter from './EventEmitter';
+import { Direction } from '../utils/interfaces';
 
-const DEFINED_DIRECTIONS = {
+const DEFINED_DIRECTIONS: Record<Direction, string[]> = {
     'UP': ['KeyW', 'ArrowUp'],
     'DOWN': ['KeyS', 'ArrowDown'],
     'LEFT': ['KeyD', 'ArrowLeft'],
@@ -21,7 +22,7 @@ export class KeyboardManager {
                 return values.includes(event.code);
             });
 
-            EventEmitter.emit('changeGameDirection', direction);
+            EventEmitter.emit('changeSnakeDirection', direction);
         }, false);
     }
 }

@@ -1,3 +1,12 @@
-import { KeyboardManager } from './lib/KeyboardManager';
+import { Game } from './core/Game';
+import { snakeColor, boardColor, pointColor } from './utils/colors';
 
-const km = new KeyboardManager();
+new Game({
+    boardColor, snakeColor, pointColor,
+
+    canvasSelector: '#game',
+    wrapperSelector: '#scene-wrapper',
+    startButtonSelector: '#start-game',
+    playAgainButtonSelector: '#play-again',
+    scoreSelector: '#result',
+});
